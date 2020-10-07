@@ -17,6 +17,8 @@ public class TicTacToeGame {
         System.out.println("Computer Input: " + input[1]);
 
         displayGameBoard();
+
+        makeAMove(2,'x');
     }
 
     /*Board Created*/
@@ -52,5 +54,29 @@ public class TicTacToeGame {
         System.out.println(creatgameBoard()[4] + " | " + creatgameBoard()[5] + " | " + creatgameBoard()[6]);
         System.out.println("-----------");
         System.out.println(creatgameBoard()[7] + " | " + creatgameBoard()[8] + " | " + creatgameBoard()[9]);
+    }
+    /* Check Index to Make Move if its Empty*/
+
+    public static boolean ifIndexEmptyOrNot(int index)
+    {
+        if (index > 0 && index <= 9 && creatgameBoard()[index] == ' ')
+        {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /*Make A Move */
+    public static void makeAMove(int index,char moveSymbol){
+        if(ifIndexEmptyOrNot(index)){
+            creatgameBoard()[index] = moveSymbol;
+        }else {
+            System.out.println("The index is Already Occupied.");
+            System.out.println("Enter new Position");
+            int newPosition = sc.nextInt();
+            makeAMove(newPosition,moveSymbol);
+        }
     }
 }
