@@ -9,11 +9,12 @@ public class TicTacToeGame {
 
     public static void main(String[] args) {
         System.out.println("Welcome to Tic Tac Toe");
-        createGameBoard();
+        char []gameBoard = createGameBoard();
         System.out.println("Enter the Symbol: ");
-        char[] input = userInput();
-        System.out.println("User input " + input[0]);
-        System.out.println("Computer input " + input[1]);
+
+        char playerSymbol = userInput();
+        char computerSymbol = (playerSymbol=='X'?'O':'X');
+        displayGameBoard();
         System.out.println("Enter User Choice Whether its head/tail");
         String toss = sc.next();
         int toss_result;
@@ -24,25 +25,69 @@ public class TicTacToeGame {
             toss_result = 2;
         System.out.println(result + " won the toss");
 
-        displayGameBoard();
         boolean flag = false;
         switch (toss_result) {
             case 1: {
                 while (true) {
-                    System.out.println("Enter the Position of Choice");
-                    int position = sc.nextInt();
+                    System.out.println("Player's Turn");
+                    System.out.println("Enter the Location where you want to make a move between 1 to 9 ");
+                    int location = sc.nextInt();
 
-                    makeAMove(position, input[0]);
-                    boolean UserResult = winningCondition(input[0]);
-                    if (UserResult == true) {
-                        System.out.println("Player won");
+                    makeAMove(location, playerSymbol);
+                    boolean winningPosition = winningCondition(playerSymbol);
+                    if (winningPosition) {
+                        System.out.println("Player Won Game");
                         flag = true;
                         break;
                     }
-                }
-            }
 
+                    if(!checkIfSpaceisFree())
+                        break;
+                    System.out.println("Computer's Turn");
+                    makeComputerMove(computerSymbol);
+                    boolean ComputerWinningPosition = winningCondition(computerSymbol);
+                    if (ComputerWinningPosition) {
+                        System.out.println("Computer Won Game");
+                        flag = true;
+                        break;
+                    }
+                    if(!checkIfSpaceisFree())
+                        break;
+                }
+                break;
+            }
+            case 2: {
+                while (true){
+                    System.out.println("Computer's Turn");
+                    makeComputerMove(computerSymbol);
+                    boolean ComputerWinningPosition = winningCondition(computerSymbol);
+                    if (ComputerWinningPosition) {
+                        System.out.println("Computer Won Game");
+                        flag = true;
+                        break;
+                    }
+                    if(!checkIfSpaceisFree())
+                        break;
+                    System.out.println("Player's Turn");
+                    System.out.println("Enter the Location where you want to make a move between 1 to 9 ");
+                    int location = sc.nextInt();
+
+                    makeAMove(location, playerSymbol);
+                    boolean winningPosition = winningCondition(playerSymbol);
+                    if (winningPosition) {
+                        System.out.println("Player Won Game");
+                        flag = true;
+                        break;
+                    }
+
+                    if(!checkIfSpaceisFree())
+                        break;
+                }
+                break;
+            }
         }
+        if(flag==false)
+            System.out.println("Game Draw");
     }
 
     /*Board Created*/
@@ -56,17 +101,11 @@ public class TicTacToeGame {
     }
 
     /*User and Computer Input*/
-    public static char[] userInput() {
+    public static char userInput() {
         System.out.println("User Input : x or o");
-        char[] symbol = new char[2];
-        symbol[0] = sc.next().charAt(0);
-        symbol[1] = ' ';
-        if (symbol[0] == 'x') {
-            symbol[1] = 'o';
-        } else {
-            symbol[1] = 'x';
-        }
-        return symbol;
+        char userSymbol = sc.next().toUpperCase().charAt(0);
+        System.out.println("Player Symbol: "+userSymbol);
+        return userSymbol;
     }
 
     /*Show GameBoard*/
@@ -84,6 +123,14 @@ public class TicTacToeGame {
             return true;
         else
             return false;
+    }
+    /*Check if Location is Free or Not*/
+    public static boolean checkIfSpaceisFree() {
+        boolean flag = false;
+        for (int position = 1; position < 10; position++)
+            if (gameBoard[position] == ' ')
+                flag = true;
+        return flag;
     }
 
     /*Make A Move */
@@ -121,5 +168,18 @@ public class TicTacToeGame {
                 || (gameBoard[7] == symbol && gameBoard[8] == symbol && gameBoard[9] == symbol) || (gameBoard[1] == symbol && gameBoard[4] == symbol && gameBoard[7] == symbol)
                 || (gameBoard[2] == symbol && gameBoard[5] == symbol && gameBoard[8] == symbol) || (gameBoard[3] == symbol && gameBoard[6] == symbol && gameBoard[9] == symbol)
                 || (gameBoard[1] == symbol && gameBoard[5] == symbol && gameBoard[9] == symbol) || (gameBoard[3] == symbol && gameBoard[5] == symbol && gameBoard[7] == symbol));
+    }
+
+    /* Make Computer Move Like As a User*/
+    public static void makeComputerMove(char symbol) {
+        int location = (int) (Math.floor(Math.random() * 9) + 1);
+        if (location > 0 && location < 10 && gameBoard[location] == ' ') {
+            gameBoard[location] = symbol;
+            displayGameBoard();
+        } else {
+            System.out.println("The Location is Invalid");
+            int newLocation = (int) (Math.floor(Math.random() * 9) + 1);
+            makeComputerMove(symbol);
+        }
     }
 }
