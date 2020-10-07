@@ -4,38 +4,41 @@ import java.util.Scanner;
 
 public class TicTacToeGame {
 
-    static Scanner sc = new Scanner(System.in);
+    public static final Scanner sc = new Scanner(System.in);
+    public static char []gameBoard = new char[10];
 
     public static void main(String[] args) {
         System.out.println("Welcome to Tic Tac Toe");
+        creategameBoard();
+
         System.out.println("Enter the Symbol: ");
         char[] input = userInput();
 
-        char[] board = creategameBoard();
+        System.out.println("User input " + input[0]);
+        System.out.println("Computer input " + input[1]);
+
+        System.out.println("Enter User Choice Whether its Head Or Tail");
+        String toss = sc.next();
+        int toss_result;
+        String result = doTossToCheckTurn(toss);
+        if (result.equals("USER"))
+            toss_result = 1;
+        else
+            toss_result = 2;
+        System.out.println(result + " won the toss");
 
         System.out.println("Enter index you want to move from 1 to 9");
         int index = sc.nextInt();
 
+        System.out.println("Display gameBoard");
         makeAMove(index, input[0]);
-        displayGameBoard();
-
-        boolean result = isBoardHaveFreeSpaceOrNot();
-        if(true){
-            System.out.println("Make A Move");
-            makeAMove(index,input[0]);
-        }
-        else{
-            System.out.println("No Free Space!!");
-        }
-
     }
 
     /*Board Created*/
 
     public static char[] creategameBoard() {
-        int gameBoardSize = 10;
-        char[] gameBoard = new char[gameBoardSize];
-        for (int i = 1; i < gameBoardSize; i++) {
+        gameBoard[0]=' ';
+        for (int i = 1; i < 10; i++) {
             gameBoard[i] = ' ';
         }
         return gameBoard;
@@ -57,17 +60,17 @@ public class TicTacToeGame {
 
     /*Show GameBoard*/
     public static void displayGameBoard() {
-        System.out.println(creategameBoard()[1] + " | " + creategameBoard()[2] + " | " + creategameBoard()[3]);
+        System.out.println(gameBoard[1] + " | " + gameBoard[2] + " | " + gameBoard[3]);
         System.out.println("-----------");
-        System.out.println(creategameBoard()[4] + " | " + creategameBoard()[5] + " | " + creategameBoard()[6]);
+        System.out.println(gameBoard[4] + " | " + gameBoard[5] + " | " + gameBoard[6]);
         System.out.println("-----------");
-        System.out.println(creategameBoard()[7] + " | " + creategameBoard()[8] + " | " + creategameBoard()[9]);
+        System.out.println(gameBoard[7] + " | " + gameBoard[8] + " | " + gameBoard[9]);
     }
 
     /* Check Index to Make Move if its Empty*/
     public static boolean ifIndexEmptyOrNot(int index)
     {
-        if (index > 0 && index <= 9 && creategameBoard()[index] == ' ')
+        if (index > 0 && index <= 9 && gameBoard[index] == ' ')
         {
             return true;
         }
@@ -79,21 +82,27 @@ public class TicTacToeGame {
     /*Make A Move */
     public static void makeAMove(int index,char moveSymbol){
         if(ifIndexEmptyOrNot(index)){
-            creategameBoard()[index] = moveSymbol;
+            gameBoard[index] = moveSymbol;
+            displayGameBoard();
         }else {
-            System.out.println("The index is Already Occupied.");
+            System.out.println("The index is Invalid.");
             System.out.println("Enter new Position");
             int newPosition = sc.nextInt();
             makeAMove(newPosition,moveSymbol);
         }
     }
-    /*Check if Board Have Free Space*/
-
-    public static boolean isBoardHaveFreeSpaceOrNot() {
-        boolean flag = false;
-        for (int i = 1; i < 10; i++)
-            if (creategameBoard()[i] == ' ')
-                flag = true;
-        return flag;
+    /* Do A Toss*/
+    public static String doTossToCheckTurn(String toss) {
+        int flag;
+        if (toss.equalsIgnoreCase("head"))
+            flag = 0;
+        else
+            flag = 1;
+        int tossResult = (int) Math.floor(Math.random() * 10) % 2;
+        if(tossResult==flag){
+            return "Player";
+        }else {
+            return "Computer";
+        }
     }
 }
