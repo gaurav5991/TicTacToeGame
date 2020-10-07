@@ -34,7 +34,7 @@ public class TicTacToeGame {
                     int location = sc.nextInt();
 
                     makeAMove(location, playerSymbol);
-                    boolean winningPosition = winningCondition(playerSymbol);
+                    boolean winningPosition = winningCondition(gameBoard,playerSymbol);
                     if (winningPosition) {
                         System.out.println("Player Won Game");
                         flag = true;
@@ -45,7 +45,7 @@ public class TicTacToeGame {
                         break;
                     System.out.println("Computer's Turn");
                     makeComputerMove(computerSymbol);
-                    boolean ComputerWinningPosition = winningCondition(computerSymbol);
+                    boolean ComputerWinningPosition = winningCondition(gameBoard,computerSymbol);
                     if (ComputerWinningPosition) {
                         System.out.println("Computer Won Game");
                         flag = true;
@@ -60,7 +60,7 @@ public class TicTacToeGame {
                 while (true){
                     System.out.println("Computer's Turn");
                     makeComputerMove(computerSymbol);
-                    boolean ComputerWinningPosition = winningCondition(computerSymbol);
+                    boolean ComputerWinningPosition = winningCondition(gameBoard,computerSymbol);
                     if (ComputerWinningPosition) {
                         System.out.println("Computer Won Game");
                         flag = true;
@@ -73,7 +73,7 @@ public class TicTacToeGame {
                     int location = sc.nextInt();
 
                     makeAMove(location, playerSymbol);
-                    boolean winningPosition = winningCondition(playerSymbol);
+                    boolean winningPosition = winningCondition(gameBoard,playerSymbol);
                     if (winningPosition) {
                         System.out.println("Player Won Game");
                         flag = true;
@@ -163,7 +163,7 @@ public class TicTacToeGame {
 
     /*Condition for Winning*/
 
-    public static boolean winningCondition(char symbol) {
+    public static boolean winningCondition(char []gameBoard,char symbol) {
         return ((gameBoard[1] == symbol && gameBoard[2] == symbol && gameBoard[3] == symbol) || (gameBoard[4] == symbol && gameBoard[5] == symbol && gameBoard[6] == symbol)
                 || (gameBoard[7] == symbol && gameBoard[8] == symbol && gameBoard[9] == symbol) || (gameBoard[1] == symbol && gameBoard[4] == symbol && gameBoard[7] == symbol)
                 || (gameBoard[2] == symbol && gameBoard[5] == symbol && gameBoard[8] == symbol) || (gameBoard[3] == symbol && gameBoard[6] == symbol && gameBoard[9] == symbol)
@@ -181,5 +181,27 @@ public class TicTacToeGame {
             int newLocation = (int) (Math.floor(Math.random() * 9) + 1);
             makeComputerMove(symbol);
         }
+    }
+    /* Computer move to win */
+    public static int ifAnyWinningMove(char []gameBoard,char symbol) {
+        for (int position = 1; position <= 9; position++) {
+            char[] newBoard = gameBoard.clone();
+            if (winningCondition(newBoard, symbol))
+                return position;
+        }
+        return 0;
+    }
+
+    /*try to block next move.*/
+    public static int getComputerMove(char[] gameBoard, char computerSymbol, char PlayerSymbol) {
+        int winningMove = ifAnyWinningMove(gameBoard,computerSymbol);
+        if (winningMove != 0)
+            return winningMove;
+        else {
+            int userWinningMove = ifAnyWinningMove(gameBoard,PlayerSymbol);
+            if (PlayerSymbol != 0)
+                return userWinningMove;
+        }
+        return 0;
     }
 }
