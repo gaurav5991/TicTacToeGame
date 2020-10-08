@@ -110,10 +110,24 @@ public class TicTacToeGame {
         }
     }
 
+    public static int TakeCorner(char[] gameBoard) {
+        int[] corners = {1, 3, 7, 9};
+        for (int position = 0; position <= 3; position++)
+            if (checkIfSpaceisFree(gameBoard, corners[position]))
+                return position;
+        return 0;
+    }
+
     /*Block Opponent from Winning*/
     public static int blockOpponentFromWin(char[] gameBoard, char symbol) {
-        int position = 1;
-        for (position = 1; position <= 9; position++) {
+        int position = 0;
+        position = winningPosition(gameBoard, symbol);
+        return position;
+    }
+
+    /*Mark Winning Positions*/
+    public static int winningPosition(char[] gameBoard, char symbol) {
+        for (int position = 1; position <= 9; position++) {
             if (checkIfSpaceisFree(gameBoard, position)) {
                 gameBoard[position] = symbol;
                 if (winningCondition(gameBoard, symbol)) {
