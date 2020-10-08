@@ -8,17 +8,22 @@ public class TicTacToeGame {
     public static char[] gameBoard = new char[10];
 
     public static void main(String[] args) {
-        System.out.println("Welcome to Tic Tac Toe");
-        char[] gameBoard = createGameBoard();
-        System.out.println("Enter the Symbol: ");
-        char playerSymbol = userInput();
-        char computerSymbol = (playerSymbol == 'X' ? 'O' : 'X');
-        displayGameBoard(gameBoard);
-        System.out.println("Enter User Choice Whether its head/tail");
-        String toss = scanner.next();
-        String result = doTossToCheckTurn(toss);
-        System.out.println(result + " won the toss");
-        playGameTillEnd(gameBoard,playerSymbol,computerSymbol,result);
+       String choice = "yes";
+        while(choice.equalsIgnoreCase("yes")){
+            System.out.println("Welcome to Tic Tac Toe");
+            char[] gameBoard = createGameBoard();
+            System.out.println("Enter the Symbol: ");
+            char playerSymbol = userInput();
+            char computerSymbol = (playerSymbol == 'X' ? 'O' : 'X');
+            displayGameBoard(gameBoard);
+            System.out.println("Enter User Choice Whether its head/tail");
+            String toss = scanner.next();
+            String result = doTossToCheckTurn(toss);
+            System.out.println(result + " won the toss");
+            playGameTillEnd(gameBoard,playerSymbol,computerSymbol,result);
+            System.out.println("Do you want to play Again");
+            choice = scanner.next();
+        }
     }
 
     /*Board Created*/
@@ -66,7 +71,6 @@ public class TicTacToeGame {
     public static char[] makeAMove(char[] gameBoard, int index, char moveSymbol) {
         if (ifIndexEmptyOrNot(index)) {
             gameBoard[index] = moveSymbol;
-            displayGameBoard(gameBoard);
         } else if (!checkIfSpaceisFree(gameBoard, index)) {
             System.out.println("The Position is Already Occupied");
             System.out.println("Enter new Position");
@@ -188,7 +192,6 @@ public class TicTacToeGame {
                 System.out.println("Enter the Position from 1 to 9: ");
                 int position = scanner.nextInt();
                 gameBoard = makeAMove(gameBoard,position, playerSymbol);
-                displayGameBoard(gameBoard);
                 if (winningCondition(gameBoard, playerSymbol)) {
                     System.out.println("Player Won");
                     return;
