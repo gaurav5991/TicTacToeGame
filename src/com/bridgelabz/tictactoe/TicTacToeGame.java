@@ -18,21 +18,7 @@ public class TicTacToeGame {
         String toss = scanner.next();
         String result = doTossToCheckTurn(toss);
         System.out.println(result + " won the toss");
-        System.out.println("Enter the Position from 1 to 9: ");
-        int position = scanner.nextInt();
-        char[] board = makeAMove(gameBoard, position, playerSymbol);
-        if (winningCondition(gameBoard, playerSymbol)) {
-            System.out.println("Player Won");
-            return;
-        }
-        if (computerMove(gameBoard, computerSymbol)) {
-            System.out.println("Computer won");
-            return;
-        }
-        if (toCheckForTie(gameBoard))
-            System.out.println("It's a Draw");
-        else
-            System.out.println("Change the turn");
+        playGameTillEnd(gameBoard,playerSymbol,computerSymbol,result);
     }
 
     /*Board Created*/
@@ -159,23 +145,23 @@ public class TicTacToeGame {
     }
 
     /*Computer Play Like Me to Win*/
-    public static boolean computerMove(char[] gameBoard, char computerSymbol) {
-        int position = 1;
-        for (position = 1; position <= 9; position++) {
-            if (checkIfSpaceisFree(gameBoard, position)) {
-                gameBoard[position] = computerSymbol;
-                if (winningCondition(gameBoard, computerSymbol))
-                    return true;
-                else
-                    gameBoard[position] = ' ';
-            }
+    public static boolean computerMove(char[] gameBoard, char computerSymbol,char playerSymbol) {
+        int position = 0;
+        position = winningPosition(gameBoard, computerSymbol);
+        if (position != 0) {
+            gameBoard[position] = computerSymbol;
+            return true;
         }
-        position = (int) (Math.random() * 9) + 1;
-        while (!checkIfSpaceisFree(gameBoard, position)) {
-            position = (int) (Math.random() * 9) + 1;
+        int blockIndex = blockOpponentFromWin(gameBoard,playerSymbol);
+        if (blockIndex != 0) {
+            gameBoard[blockIndex] = computerSymbol;
+            return false;
+        }
+        position = TakeCorner(gameBoard);
+        if (position == 0) {
+            position = chooseCenterOrSide(gameBoard);
         }
         gameBoard[position] = computerSymbol;
-        displayGameBoard(gameBoard);
         return false;
     }
 
@@ -188,5 +174,37 @@ public class TicTacToeGame {
             if (checkIfSpaceisFree(gameBoard, side[position]))
                 return position;
         return 0;
+    }
+
+    /*Play Game till End*/
+    public static void playGameTillEnd(char[] gameBoard, char playerSymbol, char computerSymbol, String firstPlayer) {
+        int toss;
+        if(firstPlayer.equalsIgnoreCase("Player"))
+            toss = 0;
+        else
+            toss = 1;
+        while (!toCheckForTie(gameBoard)) {
+            if (toss == 0) {
+                System.out.println("Enter the Position from 1 to 9: ");
+                int position = scanner.nextInt();
+                gameBoard = makeAMove(gameBoard,position, playerSymbol);
+                displayGameBoard(gameBoard);
+                if (winningCondition(gameBoard, playerSymbol)) {
+                    System.out.println("Player Won");
+                    return;
+                }
+                toss = 1;
+            } else {
+                System.out.println("changing turn");
+                if (computerMove(gameBoard, computerSymbol, playerSymbol)) {
+                    displayGameBoard(gameBoard);
+                    System.out.println("computer is the winner");
+                    return;
+                }
+                toss = 0;
+            }
+            displayGameBoard(gameBoard);
+        }
+        System.out.println("its a tie");
     }
 }
