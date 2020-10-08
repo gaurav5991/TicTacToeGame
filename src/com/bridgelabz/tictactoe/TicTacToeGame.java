@@ -178,4 +178,15 @@ public class TicTacToeGame {
         displayGameBoard(gameBoard);
         return false;
     }
+
+    /*Ability to choose Center than Sides Respectively*/
+    public static int chooseCenterOrSide(char[] gameBoard) {
+        if (checkIfSpaceisFree(gameBoard, 5))
+            return 5;
+        int[] side = { 2, 4, 6, 8 };
+        for (int position = 0; position <= 3; position++)
+            if (checkIfSpaceisFree(gameBoard, side[position]))
+                return position;
+        return 0;
+    }
 }
